@@ -23,33 +23,27 @@ def automate_velvet():
             os.makedirs(directory)
         cmd_velveth = "velveth %s %d -fasta -shortPaired %s"%(directory,i,fname)
         cmd_velvetg = "velvetg %s -exp_cov auto -cov_cutoff auto -ins_length %d -read_trkg yes -amos_file yes -unused_reads yes"%(directory,insert_length)
-        #cmd_metavelvetg = "meta-velvetg %s -ins_length %d"%(directory,insert_length)
+        cmd_metavelvetg = "meta-velvetg %s -ins_length %d"%(directory,insert_length)
         
         print cmd_velveth
         print cmd_velvetg
-        #print cmd_metavelvetg
-
-        #proc_velveth = None
-        #proc_velvetg = None
-        
+        print cmd_metavelvetg
         proc_velveth = subprocess.Popen(cmd_velveth,shell=True,stdout=subprocess.PIPE)
         proc_velveth.wait()
         proc_velvetg = subprocess.Popen(cmd_velvetg,shell=True,stdin=proc_velveth.stdout,stdout=subprocess.PIPE)
         proc_velvetg.wait()
-        #proc_metavelvetg = subprocess.Popen(cmd_metavelvetg,shell=True,stdin=proc_velvetg.stdout,stdout=subprocess.PIPE)
-        #proc_metavelvetg.wait()
+        proc_metavelvetg = subprocess.Popen(cmd_metavelvetg,shell=True,stdin=proc_velvetg.stdout,stdout=subprocess.PIPE)
+        proc_metavelvetg.wait()
 
-        #jobs_velveth.append(proc_velveth)
-        #jobs_velvetg.append(proc_velvetg)
+    #    jobs_velveth.append(proc_velveth)
+    #    jobs_velvetg.append(proc_velvetg)
     
     #for job in jobs:
-     #   job.wait()
+    #   job.wait()
        
     
 automate_velvet()
 
-#
-#    return 
 
 
 
