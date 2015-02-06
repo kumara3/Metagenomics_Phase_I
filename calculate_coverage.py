@@ -2,9 +2,9 @@
 Created on Aug 1, 2014
 
 @author: kumara3
-This script calculates the base coverage and the kmer coverage in velvet
-Input parameters : Read length, Number of sequences or reads
-Output : Base coverage
+This script calculates the metagenome nucleotide coverage.
+Input variables : Read length, Number of reads
+Output : Metagenome nucleotide coverage
 '''
 import os
 from sys import argv
@@ -25,7 +25,6 @@ def calculate_base_coverage(filename,size,readlength):
     size_dict = {}
     filehandle = open(filename,'r')
     species_reads_dict = {}
-   
     for line in filehandle:
         line = line.strip()
         reg_match = re.match(r'^(\d+)\s+Reads\:\s+\`(.*)\'',line)
@@ -52,7 +51,6 @@ def calculate_base_coverage(filename,size,readlength):
                     coverage_list.append(coverage)
                     filehandle_third.write("The base coverage of %s is %f"%(i,coverage))
                     filehandle_third.write("\n")
-                
     except:
         raise TypeError,"Check the Read length. It should be an integer"
         
@@ -62,12 +60,10 @@ def calculate_average(average_list,average_dict):#Calculates average coverage of
     average = sum(average_list)/len(average_dict)
     print "Average of coverage was found to be %f"%(average)  
       
-
 def calculate_metagenome_coverage(average_dict,size):#Calculate the coverage of metagenome
     size_dict={}
     size_of_metagenome = []
     filehandle_fourth = open(size,'r')
-    #filehandle_fourth = open('total_coverage_metagenome','w')
     Total_bases = int(readlength)*int(number_reads)
     for each in filehandle_fourth:
         genome_size,abundance,genome_total_size = 0.0,0.0,0.0
@@ -76,16 +72,13 @@ def calculate_metagenome_coverage(average_dict,size):#Calculate the coverage of 
         genome_size = reg_sizematch.group(2)
         abundance= reg_sizematch.group(3)
         genome_total_size = float(genome_size)*float(abundance)
-        #reg_sizematch.group(1),":",genome_size,":", abundance,":",
-        
         size_dict[reg_sizematch.group(1)]=genome_total_size
-         
     for k in average_dict:
         for i in size_dict:
             if i in k:
                 size_of_metagenome.append(size_dict[i])
     Total_coverage_metagenome = Total_bases/sum(size_of_metagenome)*(1e-6)
-    print "The Total metagenome coverage is %f"%(Total_coverage_metagenome)
+    print "The Total metagenome nucleotide coverage is %f"%(Total_coverage_metagenome)
     
 required_list,required_dict=calculate_base_coverage(filename,sizename,readlength)
 calculate_average(required_list,required_dict)
